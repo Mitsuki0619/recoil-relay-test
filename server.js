@@ -12,7 +12,7 @@ const typeDefs = `
   }
   type Post {
     title: String!
-    id: Int
+    content: String
   }
   type Query {
     allUsers: [User!]!
