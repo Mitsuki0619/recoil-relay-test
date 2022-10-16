@@ -2,23 +2,10 @@ import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import { PrismaClient } from "@prisma/client";
 import { makeExecutableSchema } from "@graphql-tools/schema";
+import { loadSchemaSync } from "@graphql-tools/load";
+import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 
 const prisma = new PrismaClient();
-
-const typeDefs = `
-  type User {
-    email: String!
-    name: String
-  }
-  type Post {
-    title: String!
-    content: String
-  }
-  type Query {
-    allUsers: [User!]!
-    allPosts: [Post!]!
-  }
-`;
 
 const resolvers = {
   Query: {
@@ -31,9 +18,13 @@ const resolvers = {
   },
 };
 
+const typeDefs = loadSchemaSync("./src/schema/__generated__/schema.graphql", {
+  loaders: [new GraphQLFileLoader()],
+});
+
 export const schema = makeExecutableSchema({
   resolvers,
-  typeDefs,
+  typeDefs
 });
 
 const app = express();
