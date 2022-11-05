@@ -1,13 +1,12 @@
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { loadSchemaSync } from "@graphql-tools/load";
-import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
+import { readFileSync } from "fs";
 import cors from "cors";
 import { resolvers } from "./resolvers.js";
 
-const typeDefs = loadSchemaSync("./src/schema/__generated__/schema.graphql", {
-  loaders: [new GraphQLFileLoader()],
+const typeDefs = readFileSync("../src/schema/__generated__/schema.graphql", {
+  encoding: "utf8",
 });
 
 export const schema = makeExecutableSchema({
